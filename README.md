@@ -230,5 +230,3 @@ This eCommerce SQL database project provides a foundational setup for managing a
 Feel free to contribute by adding new features or optimizing existing queries. If you encounter any issues or have suggestions, please open an issue or pull request.
 
 ---
-
-Make sure to replace `https://github.com/yourusername/ecommerce-sql-database.git` with the actual URL of your GitHub repository. If you have additional notes or need to include specific requirements, feel free to customize the README file to fit your project's needs.
