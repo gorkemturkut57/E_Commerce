@@ -20,7 +20,6 @@ CREATE TABLE Products (
 );
 GO
 
--- Orders tablosu oluþturulmasý
 -- Sipariş bilgilerini tutan tablo
 CREATE TABLE Orders (
     order_id INT PRIMARY KEY IDENTITY(1,1), -- Sipariş ID'si, otomatik artan
@@ -29,7 +28,6 @@ CREATE TABLE Orders (
     FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) -- Müşteri tablosuna referans
 );
 
--- Order_Items tablosu oluþturulmasý
 -- Siparişlerdeki ürünlerin detaylarını tutan tablo
 CREATE TABLE Order_Items (
     order_item_id INT PRIMARY KEY IDENTITY(1,1), -- Sipariş ürün ID'si, otomatik artan
