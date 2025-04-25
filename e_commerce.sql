@@ -18,7 +18,6 @@ CREATE TABLE Products (
     category NVARCHAR(50),
     price DECIMAL(10, 2) 
 );
-GO
 
 -- Sipariş bilgilerini tutan tablo
 CREATE TABLE Orders (
