@@ -1,75 +1,72 @@
--- Veritaban� olu�turulmas�
 CREATE DATABASE Ecommerce;
-GO
 
--- Veritaban�n� kullanma
 USE Ecommerce;
-GO
 
--- Customers tablosu olu�turulmas�
+-- Müşteri bilgilerini tutan tablo
 CREATE TABLE Customers (
-    customer_id INT PRIMARY KEY IDENTITY(1,1),
-    first_name NVARCHAR(50),
-    last_name NVARCHAR(50),
+    customer_id INT PRIMARY KEY IDENTITY(1,1), -- Müşteri ID'si, otomatik artan
+    first_name NVARCHAR(50), 
+    last_name NVARCHAR(50), 
     email NVARCHAR(100),
-    join_date DATE
+    join_date DATE 
 );
-GO
 
--- Products tablosu olu�turulmas�
+-- Ürün bilgilerini tutan tablo
 CREATE TABLE Products (
-    product_id INT PRIMARY KEY IDENTITY(1,1),
-    product_name NVARCHAR(100),
+    product_id INT PRIMARY KEY IDENTITY(1,1), -- Ürün ID'si, otomatik artan
+    product_name NVARCHAR(100), 
     category NVARCHAR(50),
-    price DECIMAL(10, 2)
+    price DECIMAL(10, 2) 
 );
 GO
 
--- Orders tablosu olu�turulmas�
+-- Orders tablosu oluþturulmasý
+-- Sipariş bilgilerini tutan tablo
 CREATE TABLE Orders (
-    order_id INT PRIMARY KEY IDENTITY(1,1),
-    customer_id INT,
-    order_date DATE,
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+    order_id INT PRIMARY KEY IDENTITY(1,1), -- Sipariş ID'si, otomatik artan
+    customer_id INT, -- Müşteri ID'si
+    order_date DATE, -- Sipariş tarihi
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) -- Müşteri tablosuna referans
 );
 GO
 
--- Order_Items tablosu olu�turulmas�
+-- Order_Items tablosu oluþturulmasý
+-- Siparişlerdeki ürünlerin detaylarını tutan tablo
 CREATE TABLE Order_Items (
-    order_item_id INT PRIMARY KEY IDENTITY(1,1),
-    order_id INT,
-    product_id INT,
-    quantity INT,
-    total_price DECIMAL(10, 2),
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+    order_item_id INT PRIMARY KEY IDENTITY(1,1), -- Sipariş ürün ID'si, otomatik artan
+    order_id INT, -- Sipariş ID'si
+    product_id INT, -- Ürün ID'si
+    quantity INT, -- Ürün adedi
+    total_price DECIMAL(10, 2), -- Toplam fiyat (quantity * price)
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id), -- Sipariş tablosuna referans
+    FOREIGN KEY (product_id) REFERENCES Products(product_id) -- Ürün tablosuna referans
 );
 GO
 
--- Reviews tablosu olu�turulmas�
+-- Ürünlere yapılan değerlendirmeleri tutan tablo
 CREATE TABLE Reviews (
-    review_id INT PRIMARY KEY IDENTITY(1,1),
+    review_id INT PRIMARY KEY IDENTITY(1,1), -- Değerlendirme ID'si, otomatik artan
     product_id INT,
     customer_id INT,
-    rating INT CHECK(rating >= 1 AND rating <= 5),
-    review_text NVARCHAR(MAX),
-    review_date DATE,
-    FOREIGN KEY (product_id) REFERENCES Products(product_id),
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+    rating INT CHECK(rating >= 1 AND rating <= 5), -- Değerlendirme puanı (1-5 arası)
+    review_text NVARCHAR(MAX), -- Değerlendirme metni
+    review_date DATE, -- Değerlendirme tarihi
+    FOREIGN KEY (product_id) REFERENCES Products(product_id), -- Ürün tablosuna referans
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) -- Müşteri tablosuna referans
 );
 GO
 
 -- Customers tablosuna veri ekleme
 INSERT INTO Customers (first_name, last_name, email, join_date) VALUES
-('Ali', 'Y�lmaz', 'ali.yilmaz@example.com', '2024-01-15'),
-('Ay�e', 'Kaya', 'ayse.kaya@example.com', '2024-02-10'),
+('Ali', 'Yýlmaz', 'ali.yilmaz@example.com', '2024-01-15'),
+('Ayþe', 'Kaya', 'ayse.kaya@example.com', '2024-02-10'),
 ('Mehmet', 'Demir', 'mehmet.demir@example.com', '2024-03-05');
 GO
 
 -- Products tablosuna veri ekleme
 INSERT INTO Products (product_name, category, price) VALUES
 ('Laptop', 'Elektronik', 3500.00),
-('Kulakl�k', 'Aksesuar', 150.00),
+('Kulaklýk', 'Aksesuar', 150.00),
 ('Mouse', 'Aksesuar', 75.00),
 ('Klavye', 'Aksesuar', 125.00),
 ('Telefon', 'Elektronik', 2500.00);
@@ -94,11 +91,12 @@ GO
 -- Reviews tablosuna veri ekleme
 INSERT INTO Reviews (product_id, customer_id, rating, review_text, review_date) VALUES
 (1, 1, 5, 'Harika bir laptop!', '2024-04-02'),
-(3, 1, 4, 'Fiyat�na g�re g�zel bir mouse.', '2024-04-03'),
-(5, 2, 2, 'Beklentimi kar��lamad�.', '2024-04-06'),
-(2, 3, 4, 'Kulakl�k kaliteli ses veriyor.', '2024-04-07');
+(3, 1, 4, 'Fiyatýna göre güzel bir mouse.', '2024-04-03'),
+(5, 2, 2, 'Beklentimi karþýlamadý.', '2024-04-06'),
+(2, 3, 4, 'Kulaklýk kaliteli ses veriyor.', '2024-04-07');
 GO
 
+-- Her bir ürünün toplam satış adedini listeleyen sorgu
 SELECT p.product_name, SUM(oi.quantity) AS total_sold
 FROM Products p
 JOIN Order_Items oi ON p.product_id = oi.product_id
@@ -106,6 +104,7 @@ GROUP BY p.product_name
 ORDER BY total_sold DESC;
 GO
 
+-- Her bir müşterinin yaptığı toplam alışveriş tutarını hesaplayan sorgu
 SELECT c.first_name, c.last_name, SUM(oi.total_price) AS total_revenue
 FROM Customers c
 JOIN Orders o ON c.customer_id = o.customer_id
@@ -114,6 +113,7 @@ GROUP BY c.first_name, c.last_name
 ORDER BY total_revenue DESC;
 GO
 
+-- Her ay için toplam sipariş sayısını ve satış tutarını listeleyen sorgu
 SELECT 
     FORMAT(o.order_date, 'yyyy-MM') AS month, 
     COUNT(DISTINCT o.order_id) AS total_orders,
@@ -124,10 +124,10 @@ GROUP BY FORMAT(o.order_date, 'yyyy-MM')
 ORDER BY month;
 GO
 
+-- Her ürün için ortalama değerlendirme puanını hesaplayan sorgu
 SELECT p.product_name, AVG(r.rating) AS average_rating
 FROM Products p
 JOIN Reviews r ON p.product_id = r.product_id
 GROUP BY p.product_name
 ORDER BY average_rating DESC;
 GO
-
