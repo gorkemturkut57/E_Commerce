@@ -28,7 +28,6 @@ CREATE TABLE Orders (
     order_date DATE, -- Sipariş tarihi
     FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) -- Müşteri tablosuna referans
 );
-GO
 
 -- Order_Items tablosu oluþturulmasý
 -- Siparişlerdeki ürünlerin detaylarını tutan tablo
@@ -41,7 +40,6 @@ CREATE TABLE Order_Items (
     FOREIGN KEY (order_id) REFERENCES Orders(order_id), -- Sipariş tablosuna referans
     FOREIGN KEY (product_id) REFERENCES Products(product_id) -- Ürün tablosuna referans
 );
-GO
 
 -- Ürünlere yapılan değerlendirmeleri tutan tablo
 CREATE TABLE Reviews (
@@ -54,14 +52,12 @@ CREATE TABLE Reviews (
     FOREIGN KEY (product_id) REFERENCES Products(product_id), -- Ürün tablosuna referans
     FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) -- Müşteri tablosuna referans
 );
-GO
 
 -- Customers tablosuna veri ekleme
 INSERT INTO Customers (first_name, last_name, email, join_date) VALUES
 ('Ali', 'Yýlmaz', 'ali.yilmaz@example.com', '2024-01-15'),
 ('Ayþe', 'Kaya', 'ayse.kaya@example.com', '2024-02-10'),
 ('Mehmet', 'Demir', 'mehmet.demir@example.com', '2024-03-05');
-GO
 
 -- Products tablosuna veri ekleme
 INSERT INTO Products (product_name, category, price) VALUES
@@ -70,14 +66,12 @@ INSERT INTO Products (product_name, category, price) VALUES
 ('Mouse', 'Aksesuar', 75.00),
 ('Klavye', 'Aksesuar', 125.00),
 ('Telefon', 'Elektronik', 2500.00);
-GO
 
 -- Orders tablosuna veri ekleme
 INSERT INTO Orders (customer_id, order_date) VALUES
 (1, '2024-04-01'),
 (2, '2024-04-02'),
 (3, '2024-04-05');
-GO
 
 -- Order_Items tablosuna veri ekleme
 INSERT INTO Order_Items (order_id, product_id, quantity, total_price) VALUES
@@ -94,7 +88,6 @@ INSERT INTO Reviews (product_id, customer_id, rating, review_text, review_date) 
 (3, 1, 4, 'Fiyatýna göre güzel bir mouse.', '2024-04-03'),
 (5, 2, 2, 'Beklentimi karþýlamadý.', '2024-04-06'),
 (2, 3, 4, 'Kulaklýk kaliteli ses veriyor.', '2024-04-07');
-GO
 
 -- Her bir ürünün toplam satış adedini listeleyen sorgu
 SELECT p.product_name, SUM(oi.quantity) AS total_sold
@@ -102,7 +95,6 @@ FROM Products p
 JOIN Order_Items oi ON p.product_id = oi.product_id
 GROUP BY p.product_name
 ORDER BY total_sold DESC;
-GO
 
 -- Her bir müşterinin yaptığı toplam alışveriş tutarını hesaplayan sorgu
 SELECT c.first_name, c.last_name, SUM(oi.total_price) AS total_revenue
@@ -111,7 +103,6 @@ JOIN Orders o ON c.customer_id = o.customer_id
 JOIN Order_Items oi ON o.order_id = oi.order_id
 GROUP BY c.first_name, c.last_name
 ORDER BY total_revenue DESC;
-GO
 
 -- Her ay için toplam sipariş sayısını ve satış tutarını listeleyen sorgu
 SELECT 
@@ -122,7 +113,6 @@ FROM Orders o
 JOIN Order_Items oi ON o.order_id = oi.order_id
 GROUP BY FORMAT(o.order_date, 'yyyy-MM')
 ORDER BY month;
-GO
 
 -- Her ürün için ortalama değerlendirme puanını hesaplayan sorgu
 SELECT p.product_name, AVG(r.rating) AS average_rating
