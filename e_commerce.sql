@@ -117,4 +117,3 @@ FROM Products p
 JOIN Reviews r ON p.product_id = r.product_id
 GROUP BY p.product_name
 ORDER BY average_rating DESC;
-GO
